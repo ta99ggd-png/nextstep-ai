@@ -46,6 +46,3 @@ Rules:
   }
 });
 
-app.listen(3000, () => {
-  console.log("NextStep AI running on http://127.0.0.1:3000");
-});
