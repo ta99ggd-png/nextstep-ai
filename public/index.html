@@ -1,0 +1,773 @@
+d>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextStep</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f8ff;
+  color:#18213d;
+}
+
+.app{
+  max-width:480px;
+  margin:auto;
+  padding:22px;
+  padding-bottom:90px;
+}
+
+.logo{
+  font-size:30px;
+  font-weight:bold;
+  color:#087df5;
+}
+
+.logo span{color:#18213d}
+
+.subtitle{color:#69738a}
+
+.search{
+  display:flex;
+  margin-top:20px;
+}
+
+.search input{
+  flex:1;
+  padding:15px;
+  border:1px solid #dce3ef;
+  border-radius:15px 0 0 15px;
+  font-size:15px;
+}
+
+.search button{
+  width:58px;
+  border:0;
+  background:#087df5;
+  color:white;
+  border-radius:0 15px 15px 0;
+  font-size:21px;
+}
+
+.section{margin-top:28px}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.card{
+  background:white;
+  border:0;
+  padding:18px;
+  border-radius:18px;
+  text-align:left;
+  box-shadow:0 3px 12px rgba(20,40,80,.08);
+}
+
+.icon{font-size:28px}
+
+.card b{
+  display:block;
+  margin-top:8px;
+}
+
+.card small{
+  color:#7b8499;
+}
+
+.page{display:none}
+
+.page.active{display:block}
+
+.primary{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:15px;
+  background:#087df5;
+  color:white;
+  font-size:16px;
+  margin-top:12px;
+}
+
+.box{
+  background:white;
+  padding:17px;
+  border-radius:17px;
+  margin-top:12px;
+}
+
+.back{
+  border:0;
+  background:none;
+  font-size:15px;
+  margin-bottom:15px;
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:480px;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  padding:12px 3px;
+  box-shadow:0 -3px 15px rgba(0,0,0,.08);
+}
+
+.bottom button{
+  border:0;
+  background:none;
+  color:#59647b;
+  font-size:12px;
+}
+
+.bottom button.active{
+  color:#087df5;
+}
+
+.list{
+  background:white;
+  padding:15px;
+  border-radius:15px;
+  margin-top:10px;
+}
+
+.goalInput{
+  width:100%;
+  padding:14px;
+  border:1px solid #ddd;
+  border-radius:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- HOME -->
+<div id="home" class="page active">
+
+<div class="logo">
+<span>Next</span>Step
+</div>
+
+<h1>Hello 👋</h1>
+<p class="subtitle">Aaj aapko kis cheez mein help chahiye?</p>
+
+<div class="search">
+<input id="problem" placeholder="Apni problem likho...">
+<button onclick="getSuggestions()">➜</button>
+</div>
+
+<div class="section">
+<h2>Categories</h2>
+
+<div class="grid">
+
+<button class="card" onclick="category('Study & Learning')">
+<div class="icon">📚</div>
+<b>Study & Learning</b>
+<small>Exam, notes, skills</small>
+</button>
+
+<button class="card" onclick="category('Career & Work')">
+<div class="icon">💼</div>
+<b>Career & Work</b>
+<small>Jobs, CV, interview</small>
+</button>
+
+<button class="card" onclick="category('Money & Finance')">
+<div class="icon">💰</div>
+<b>Money & Finance</b>
+<small>Budget & saving</small>
+</button>
+
+<button class="card" onclick="category('Travel & Trips')">
+<div class="icon">✈️</div>
+<b>Travel & Trips</b>
+<small>Plans & places</small>
+</button>
+
+<button class="card" onclick="category('Daily Life')">
+<div class="icon">🏠</div>
+<b>Daily Life</b>
+<small>Routine & home</small>
+</button>
+
+<button class="card" onclick="showPage('goals')">
+<div class="icon">🎯</div>
+<b>Goals</b>
+<small>Plan your next step</small>
+</button>
+
+</div>
+</div>
+</div>
+
+<!-- SUGGESTIONS -->
+<div id="suggestions" class="page">
+
+<button class="back" onclick="showPage('home')">← Back</button>
+
+<h1>Suggestions 💡</h1>
+<p id="yourProblem"></p>
+
+<div class="box">
+<b>🤖 AI Suggestion</b>
+<p id="aiAnswer">AI soch raha hai...</p>
+</div>
+
+<button class="primary" onclick="saveIdea()">💾 Save Idea</button>
+
+</div>
+
+<!-- SAVED -->
+<div id="saved" class="page">
+
+<h1>Saved Ideas 💾</h1>
+
+<div id="savedList"></div>
+
+</div>
+
+<!-- HISTORY -->
+<div id="history" class="page">
+
+<h1>History 🕐</h1>
+
+<div id="historyList"></div>
+
+</div>
+
+<!-- GOALS -->
+<div id="goals" class="page">
+
+<h1>My Goals 🎯</h1>
+
+<input id="goalInput"
+class="goalInput"
+placeholder="Apna goal likho...">
+
+<button class="primary" onclick="addGoal()">+ Add Goal</button>
+
+<div id="goalList"></div>
+
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="page">
+
+<h1>Profile 👤</h1>
+
+<div class="box">
+<h2>NextStep User</h2>
+<p>Keep learning. Keep moving forward. 🚀</p>
+</div>
+
+<div class="box">
+<b>Saved Ideas</b>
+<p id="savedCount">0</p>
+</div>
+
+<div class="box">
+<b>Goals</b>
+<p id="goalCount">0</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom">
+
+<button id="navHome" class="active"
+onclick="showPage('home')">
+🏠<br>Home
+</button>
+
+<button id="navSaved"
+onclick="showPage('saved')">
+💾<br>Saved
+</button>
+
+<button id="navHistory"
+onclick="showPage('history')">
+🕐<br>History
+</button>
+
+<button id="navProfile"
+onclick="showPage('profile')">
+👤<br>Profile
+</button>
+
+</div>
+
+<script>
+
+function showPage(page){
+
+document.querySelectorAll(".page").forEach(function(p){
+p.classList.remove("active");
+});
+
+document.getElementById(page).classList.add("active");
+
+document.querySelectorAll(".bottom button").forEach(function(b){
+b.classList.remove("active");
+});
+
+if(page==="home")
+document.getElementById("navHome").classList.add("active");
+
+if(page==="saved")
+document.getElementById("navSaved").classList.add("active");
+
+if(page==="history")
+document.getElementById("navHistory").classList.add("active");
+
+if(page==="profile")
+document.getElementById("navProfile").classList.add("active");
+
+if(page==="saved") loadSaved();
+if(page==="history") loadHistory();
+if(page==="profile") updateProfile();
+if(page==="goals") loadGoals();
+
+}
+
+function getSuggestions(){
+
+let problem=document.getElementById("problem").value.trim();
+
+if(problem===""){
+alert("Pehle apni problem likho!");
+return;
+}
+
+document.getElementById("yourProblem").innerText=
+"Your problem: "+problem;
+
+let history=JSON.parse(
+localStorage.getItem("history") || "[]"
+);
+
+history.unshift(problem);
+
+localStorage.setItem(
+"history",
+JSON.stringify(history.slice(0,20))
+);
+
+showPage("suggestions");
+
+}
+
+function saveIdea(){
+
+let problem = document.getElementById("yourProblem").innerText;
+let answer = document.getElementById("aiAnswer").innerText;
+
+if(!problem || !answer) return;
+
+let saved = JSON.parse(
+localStorage.getItem("saved") || "[]"
+);
+
+saved.unshift({
+  problem: problem,
+  answer: answer
+});
+
+localStorage.setItem(
+"saved",
+JSON.stringify(saved)
+);
+
+alert("Idea saved! 💾");
+
+}
+
+function loadSaved(){
+
+  let saved = JSON.parse(
+    localStorage.getItem("saved") || "[]"
+  );
+
+  let box = document.getElementById("savedList");
+
+  if(saved.length === 0){
+    box.innerHTML = "<p>No saved ideas yet.</p>";
+    return;
+  }
+
+  box.innerHTML = "";
+
+  saved.forEach(function(item, index){
+
+    let problem = typeof item === "string"
+      ? item
+      : (item.problem || "");
+
+    let answer = typeof item === "string"
+      ? ""
+      : (item.answer || "");
+
+    let card = document.createElement("div");
+    card.className = "list";
+
+    let problemTitle = document.createElement("b");
+    problemTitle.textContent = "Problem:";
+    card.appendChild(problemTitle);
+
+    let problemText = document.createElement("div");
+    problemText.textContent = problem;
+    card.appendChild(problemText);
+
+    if(answer){
+      let answerTitle = document.createElement("b");
+      answerTitle.textContent = "AI Suggestion:";
+      card.appendChild(answerTitle);
+
+      let answerText = document.createElement("div");
+      answerText.textContent = answer;
+      card.appendChild(answerText);
+    }
+
+    let br = document.createElement("br");
+    card.appendChild(br);
+
+    let button = document.createElement("button");
+    button.textContent = "Delete";
+    button.onclick = function(){
+      deleteSaved(index);
+    };
+
+    card.appendChild(button);
+    box.appendChild(card);
+  });
+
+}
+
+function deleteSaved(index){
+
+let saved=JSON.parse(
+localStorage.getItem("saved") || "[]"
+);
+
+saved.splice(index,1);
+
+localStorage.setItem(
+"saved",
+JSON.stringify(saved)
+);
+
+loadSaved();
+
+}
+
+function loadHistory(){
+
+let history=JSON.parse(
+localStorage.getItem("history") || "[]"
+);
+
+let box=document.getElementById("historyList");
+
+if(history.length===0){
+
+box.innerHTML="<p>No history yet.</p>";
+return;
+
+}
+
+box.innerHTML="";
+
+history.forEach(function(item){
+
+box.innerHTML+=
+'<div class="list">📝 '+item+'</div>';
+
+});
+
+}
+
+function category(name){
+
+document.getElementById("problem").value=
+"I need help with "+name;
+
+showPage("home");
+
+}
+
+function addGoal(){
+
+let input=document.getElementById("goalInput");
+let goal=input.value.trim();
+
+if(goal===""){
+alert("Pehle goal likho!");
+return;
+}
+
+let goals=JSON.parse(
+localStorage.getItem("goals") || "[]"
+);
+
+goals.push(goal);
+
+localStorage.setItem(
+"goals",
+JSON.stringify(goals)
+);
+
+input.value="";
+
+loadGoals();
+
+}
+
+function loadGoals(){
+
+let goals=JSON.parse(
+localStorage.getItem("goals") || "[]"
+);
+
+let box=document.getElementById("goalList");
+
+box.innerHTML="";
+
+goals.forEach(function(goal,index){
+
+box.innerHTML+=
+'<div class="list">🎯 '+goal+
+'<br><button onclick="deleteGoal('+index+')">Delete</button>'+
+'</div>';
+
+});
+
+}
+
+function deleteGoal(index){
+
+let goals=JSON.parse(
+localStorage.getItem("goals") || "[]"
+);
+
+goals.splice(index,1);
+
+localStorage.setItem(
+"goals",
+JSON.stringify(goals)
+);
+
+loadGoals();
+
+}
+
+function updateProfile(){
+
+let saved=JSON.parse(
+localStorage.getItem("saved") || "[]"
+);
+
+let goals=JSON.parse(
+localStorage.getItem("goals") || "[]"
+);
+
+document.getElementById("savedCount").innerText=
+saved.length;
+
+document.getElementById("goalCount").innerText=
+goals.length;
+
+}
+
+</script>
+
+</body>
+</html>
+<html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NextStep</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f8ff;
+  color:#18213d;
+}
+.app{
+  max-width:480px;
+  margin:auto;
+  padding:22px;
+}
+.logo{
+  font-size:30px;
+  font-weight:bold;
+  color:#087df5;
+}
+input{
+  width:100%;
+  padding:16px;
+  margin-top:25px;
+  border:1px solid #ddd;
+  border-radius:15px;
+  font-size:16px;
+}
+button{
+  margin-top:12px;
+  width:100%;
+  padding:16px;
+  border:0;
+  border-radius:15px;
+  background:#087df5;
+  color:white;
+  font-size:16px;
+}
+#suggestions{
+  display:none;
+  margin-top:25px;
+}
+.box{
+  background:white;
+  padding:18px;
+  margin-top:12px;
+  border-radius:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="logo">NextStep</div>
+
+<div id="home">
+<h1>Hello 👋</h1><h2>Categories</h2>
+
+<div class="categories">
+
+<button onclick="showCategory('Study & Learning')">
+📚 Study & Learning
+</button>
+
+<button onclick="showCategory('Career & Work')">
+💼 Career & Work
+</button>
+
+<button onclick="showCategory('Money & Finance')">
+💰 Money & Finance
+</button>
+
+<button onclick="showCategory('Travel & Trips')">
+✈️ Travel & Trips
+</button>
+
+<button onclick="showCategory('Daily Life')">
+🏠 Daily Life
+</button>
+
+<button onclick="showCategory('Goals')">
+🎯 Goals
+</button>
+
+</div>
+
+<p id="categoryResult"></p><p>Aaj aapko kis cheez mein help chahiye?</p>
+
+<input id="problem" placeholder="Apni problem likho...">
+
+<button onclick="getSuggestions()">Get Suggestions 🚀</button>
+</div>
+
+<div id="suggestions">
+<h1>Suggestions 💡</h1>
+
+<p id="yourProblem"></p>
+
+<div class="box">
+<b>Step 1</b>
+<p>Apni problem ko chhote parts mein divide karo.</p>
+</div>
+
+<div class="box">
+<b>Step 2</b>
+<p>Sabse easy step se start karo.</p>
+</div>
+
+<div class="box">
+<b>Step 3</b>
+<p>Apni progress check karo aur next step choose karo.</p>
+</div>
+
+<button onclick="goBack()">← Back</button>
+</div>
+
+</div>
+
+<script>
+function showCategory(name){
+  document.getElementById("categoryResult").innerText =
+    "You selected: " + name;
+}
+
+async function getSuggestions(){
+  const problem = document.getElementById("problem").value.trim();
+
+  if(problem === ""){
+    alert("Pehle apni problem likho!");
+    return;
+  }
+
+  document.getElementById("yourProblem").innerText =
+    "Your problem: " + problem;
+
+  document.getElementById("home").style.display = "none";
+  document.getElementById("suggestions").style.display = "block";
+
+  try {
+    const response = await fetch("/api/suggest", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ problem: problem })
+    });
+
+    const data = await response.json();
+
+    if(!response.ok){
+      throw new Error(data.error || "AI request failed");
+    }
+
+    document.getElementById("aiAnswer").innerText = data.answer || "AI ne answer nahi diya.";
+  } catch(error) {
+    console.error(error);
+    alert("AI se response nahi mila. Server check karo.");
+  }
+}
+
+function goBack(){
+  document.getElementById("suggestions").style.display = "none";
+  document.getElementById("home").style.display = "block";
+}
+</script>
+
+</body>
+</html>
+
