@@ -5,6 +5,10 @@ const app = express();
 
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.sendFile("index.html", { root: "public" });
+});
+
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY
 });
